@@ -11,9 +11,7 @@ terraform {
   }
 }
 
-provider "docker" {
-  host = "tcp://localhost:2375"
-}
+
 variable "choco_installed" {
   description = "Is Chocolatey installed?"
   type        = bool
@@ -94,7 +92,9 @@ resource "null_resource" "configure_docker_desktop" {
 
 
 #End requirements install
-
+provider "docker" {
+  host = var.docker_desktop_installed ? "tcp://localhost:2375" : null
+}
 
 variable "host_path" {
   description = "The path on the host where the volume data should be stored."
