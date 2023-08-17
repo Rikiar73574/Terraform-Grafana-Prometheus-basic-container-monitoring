@@ -29,7 +29,7 @@ resource "null_resource" "check_requirements" {
 resource "null_resource" "install_choco" {
   provisioner "local-exec" {
     command = <<EOF
-      powershell -command "if (-not (Get-Variable -Name TF_VAR_choco_installed -ErrorAction SilentlyContinue)) { .Terraform_Helpers\choco-install.ps1 }"
+      powershell -command "Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser; if (-not (Get-Variable -Name TF_VAR_choco_installed -ErrorAction SilentlyContinue)) { .\Terraform_Helpers\choco-install.ps1 }; Set-ExecutionPolicy -ExecutionPolicy Restricted -Scope CurrentUser"
     EOF
   }
 }
@@ -37,7 +37,7 @@ resource "null_resource" "install_choco" {
 resource "null_resource" "install_terraform" {
   provisioner "local-exec" {
     command = <<EOF
-      powershell -command "if (-not (Get-Variable -Name TF_VAR_terraform_installed -ErrorAction SilentlyContinue)) { .Terraform_Helpers\terraform-install.ps1 }"
+      powershell -command "Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser; if (-not (Get-Variable -Name TF_VAR_terraform_installed -ErrorAction SilentlyContinue)) { .\Terraform_Helpers\terraform-install.ps1 }; Set-ExecutionPolicy -ExecutionPolicy Restricted -Scope CurrentUser"
     EOF
   }
 }
@@ -45,7 +45,7 @@ resource "null_resource" "install_terraform" {
 resource "null_resource" "install_docker_desktop" {
   provisioner "local-exec" {
     command = <<EOF
-      powershell -command "if (-not (Get-Variable -Name TF_VAR_docker_desktop_installed -ErrorAction SilentlyContinue)) { .Terraform_Helpers\docker_desktop-install.ps1 }"
+      powershell -command "Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser; if (-not (Get-Variable -Name TF_VAR_docker_desktop_installed -ErrorAction SilentlyContinue)) { .\Terraform_Helpers\docker_desktop-install.ps1 }; Set-ExecutionPolicy -ExecutionPolicy Restricted -Scope CurrentUser"
     EOF
   }
 }
@@ -55,10 +55,11 @@ resource "null_resource" "configure_docker_desktop" {
 
   provisioner "local-exec" {
     command = <<EOF
-      powershell -command "if ((Get-Variable -Name TF_VAR_docker_desktop_installed -ErrorAction SilentlyContinue) -or (Get-Command docker -ErrorAction SilentlyContinue)) { .Terraform_Helpers\docker_desktop-configure.ps1 }"
+      powershell -command "Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser; if ((Get-Variable -Name TF_VAR_docker_desktop_installed -ErrorAction SilentlyContinue) -or (Get-Command docker -ErrorAction SilentlyContinue)) { .\Terraform_Helpers\docker_desktop-configure.ps1 }; Set-ExecutionPolicy -ExecutionPolicy Restricted -Scope CurrentUser"
     EOF
   }
 }
+
 
 output "all_installed" {
   description = "Are all softwares installed?"
