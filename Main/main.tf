@@ -1,16 +1,3 @@
-module "requirements" {
-  source = "./modules/requirements"
-  // Add any required variables here.
-}
-
-module "grafana" {
-  source = "./modules/images"
-  // Add any required variables here.
-  
-  requirement_output = module.requirements.all_installed
-}
-
-
 terraform {
   required_providers {
     docker = {
@@ -36,3 +23,6 @@ provider "grafana" {
 }
 
 
+module "grafana" {
+  source = "./modules/images"
+}
