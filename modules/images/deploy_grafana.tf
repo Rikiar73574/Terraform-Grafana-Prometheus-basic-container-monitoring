@@ -11,9 +11,20 @@ terraform {
   }
 }
 
+variable "requirement_output" {
+  description = "Output of the requirements module"
+  type        = bool
+}
+
 provider "docker" {
   host = "tcp://localhost:2375"
 }
+
+provider "grafana" {
+  url  = "http://localhost:3000/"
+  auth = "admin:admin" // replace with your Grafana credentials
+}
+
 
 variable "host_path" {
   description = "The path on the host where the volume data should be stored."
@@ -254,10 +265,6 @@ resource "null_resource" "grafana_wait" {
   
 }
 
-provider "grafana" {
-  url  = "http://localhost:3000/"
-  auth = "admin:admin" // replace with your Grafana credentials
-}
 
 resource "grafana_data_source" "prometheus" {
   type          = "prometheus"

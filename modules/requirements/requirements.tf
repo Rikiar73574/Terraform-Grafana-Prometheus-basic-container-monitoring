@@ -59,3 +59,14 @@ resource "null_resource" "configure_docker_desktop" {
     EOF
   }
 }
+
+output "all_installed" {
+  description = "Are all softwares installed?"
+  value       = var.choco_installed && var.terraform_installed && var.docker_desktop_installed
+}
+
+variable "requirement_output" {
+  description = "Output of the requirements module"
+  type        = bool
+  default     = false
+}
