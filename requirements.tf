@@ -23,14 +23,15 @@ resource "null_resource" "install_choco" {
 
   provisioner "local-exec" {
     command = <<EOF
-      powershell.exe -ExecutionPolicy Bypass -File ${abspath(path.module)}\Terraform_Helpers\choco-install.ps1 
-    EOF
+      powershell Start-Process -Verb RunAs powershell.exe -ArgumentList "-Command Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
+      EOF
   }
+  
 }
 
 resource "null_resource" "install_terraform" {
   count = var.terraform_installed ? 0 : 1
-
+  depends_on = [null_resource.install_choco]
   provisioner "local-exec" {
     command = <<EOF
       powershell.exe -ExecutionPolicy Bypass -File ${abspath(path.module)}\Terraform_Helpers\terraform-install.ps1 
@@ -40,7 +41,7 @@ resource "null_resource" "install_terraform" {
 
 resource "null_resource" "install_docker_desktop" {
   count = var.docker_desktop_installed ? 0 : 1
-
+  depends_on = [null_resource.install_choco]
   provisioner "local-exec" {
     command = <<EOF
       powershell.exe -ExecutionPolicy Bypass -File ${abspath(path.module)}\Terraform_Helpers\docker-desktop-install.ps1 
